@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Amin | Photo Gallery</title>
+    <!-- Fonts matching the Landing Page -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+
+    <div class="page-container">
+        <!-- Header / Navigation -->
+        <header class="navbar">
+            <div class="logo">
+                <a href="index.html">Baby Amin</a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="gallery.html" class="active">Gallery</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Gallery Header Title -->
+        <section class="gallery-hero">
+            <span class="subheading">Milestone Memories</span>
+            <h1 class="main-heading">Six Months of Joy</h1>
+            <div class="divider"></div>
+            <p class="tagline">A curated collection of moments celebrating Baby Amin's special day.</p>
+            
+            <!-- Category Filter Buttons -->
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterGallery('curated', this)">Curated Highlights</button>
+                <button class="filter-btn" onclick="filterGallery('portraits', this)">Portraits</button>
+                <button class="filter-btn" onclick="filterGallery('decor', this)">Decor & Details</button>
+                <button class="filter-btn" onclick="filterGallery('celebration', this)">Cake Smash</button>
+                <button class="filter-btn" onclick="filterGallery('all', this)">All Photos</button>
+            </div>
+        </section>
+
+        <!-- Gallery Masonry Container -->
+        <main class="gallery-container">
+            <div class="masonry-grid" id="galleryGrid">
+                <!-- Dynamically populated by JavaScript below -->
+            </div>
+
+            <!-- Elegant Load More Button -->
+            <div class="load-more-wrapper">
+                <button id="loadMoreBtn" class="btn-load-more" onclick="showNextBatch()">Discover More Moments</button>
+            </div>
+        </main>
+
+        <!-- Lightbox Modal for Large Image View -->
+        <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+            <span class="close-btn">&times;</span>
+            <img class="lightbox-content" id="lightboxImg" alt="Full screen preview">
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p class="copyright">&copy; 2026 Baby Amin’s Journey. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Script to Generate All Photos with Controlled Pagination -->
+    <script>
+        const startNum = 2516;
+        const endNum = 2565;
+        
+        // Define sequence logic for categories
+        const decorPhotos = [2516, 2517, 2518, 2524, 2525, 2526, 2527, 2528, 2538, 2539, 2540, 2541, 2556, 2557, 2558, 2559, 2560, 2561, 2562, 2563];
+        const celebrationPhotos = [2542, 2543, 2544, 2545, 2546, 2547, 2548, 2549, 2550, 2551, 2552, 2553, 2554, 2555];
+        const curatedPhotos = [2519, 2522, 2530, 2535, 2543, 2548, 2558];
+
+        const galleryGrid = document.getElementById('galleryGrid');
+        const itemsPerPage = 9;
+        let currentCategory = 'curated';
+
+        // Dynamically build image grid items
+        for (let i = startNum; i <= endNum; i++) {
+            const imgName = `IMG_${i}.jpg`;
+            const imgPath = `images/${imgName}`;
+            
+            // Assign class categories
+            let categories = [];
+            if (curatedPhotos.includes(i)) categories.push('curated');
+            if (decorPhotos.includes(i)) {
+                categories.push('decor');
+            } else if (celebrationPhotos.includes(i)) {
+                categories.push('celebration');
+            } else {
+                categories.push('portraits');
+            }
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `gallery-item ${categories.join(' ')}`;
+            itemDiv.style.display = 'none'; // Hidden by default for pagination
+            itemDiv.onclick = () => openLightbox(imgPath);
+
+            itemDiv.innerHTML = `
+                <img src="${imgPath}" alt="Baby Amin Photo ${i}" loading="lazy">
+                <div class="item-overlay"><span>View Full Screen</span></div>
+            `;
+
+            galleryGrid.appendChild(itemDiv);
+        }
+
+        // Show next batch of items based on active category
+        function showNextBatch() {
+            const items = Array.from(document.querySelectorAll('.gallery-item'));
+            let revealed = 0;
+
+            for (let item of items) {
+                const isMatch = (currentCategory === 'all' || item.classList.contains(currentCategory));
+                if (isMatch && item.style.display === 'none') {
+                    item.style.display = 'block';
+                    revealed++;
+                    if (revealed >= itemsPerPage) break;
+                }
+            }
+
+            // Toggle "Discover More" button visibility
+            const hiddenMatches = items.filter(item => 
+                (currentCategory === 'all' || item.classList.contains(currentCategory)) && item.style.display === 'none'
+            );
+            document.getElementById('loadMoreBtn').style.display = hiddenMatches.length > 0 ? 'inline-block' : 'none';
+        }
+
+        // Filter Gallery function
+        function filterGallery(category, buttonEl) {
+            currentCategory = category;
+            const items = document.querySelectorAll('.gallery-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (buttonEl) buttonEl.classList.add('active');
+
+            // Hide all and reveal first batch of selected category
+            items.forEach(item => item.style.display = 'none');
+            showNextBatch();
+        }
+
+        // Lightbox functions
+        function openLightbox(src) {
+            document.getElementById('lightbox').style.display = 'flex';
+            document.getElementById('lightboxImg').src = src;
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        // Initial view setup
+        showNextBatch();
+    </script>
+</body>
+</html>
