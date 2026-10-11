@@ -82,33 +82,36 @@
         let currentCategory = 'curated';
 
         // Dynamically build image grid items
-        for (let i = startNum; i <= endNum; i++) {
-            const imgName = `IMG_${i}.jpg`;
-            const imgPath = `/images/${imgName}`;
-            
-            // Assign class categories
-            let categories = [];
-            if (curatedPhotos.includes(i)) categories.push('curated');
-            if (decorPhotos.includes(i)) {
-                categories.push('decor');
-            } else if (celebrationPhotos.includes(i)) {
-                categories.push('celebration');
-            } else {
-                categories.push('portraits');
-            }
+       // Dynamically build image grid items
+for (let i = startNum; i <= endNum; i++) {
+    // Note: Check if your files inside the 'images' folder are .JPG or .jpg
+    // If your files end in uppercase .JPG, change '.jpg' below to '.JPG'
+    const imgName = `IMG_${i}.jpg`; 
+    const imgPath = `images/${imgName}`;
+    
+    // Assign class categories
+    let categories = [];
+    if (curatedPhotos.includes(i)) categories.push('curated');
+    if (decorPhotos.includes(i)) {
+        categories.push('decor');
+    } else if (celebrationPhotos.includes(i)) {
+        categories.push('celebration');
+    } else {
+        categories.push('portraits');
+    }
 
-            const itemDiv = document.createElement('div');
-            itemDiv.className = `gallery-item ${categories.join(' ')}`;
-            itemDiv.style.display = 'none'; // Hidden by default for pagination
-            itemDiv.onclick = () => openLightbox(imgPath);
+    const itemDiv = document.createElement('div');
+    itemDiv.className = `gallery-item ${categories.join(' ')}`;
+    itemDiv.style.display = 'none'; // Hidden by default for pagination
+    itemDiv.onclick = () => openLightbox(imgPath);
 
-            itemDiv.innerHTML = `
-                <img src="${imgPath}" alt="Baby Amin Photo ${i}" loading="lazy">
-                <div class="item-overlay"><span>View Full Screen</span></div>
-            `;
+    itemDiv.innerHTML = `
+        <img src="${imgPath}" alt="Baby Amin Photo ${i}" loading="lazy" onerror="this.src='images/IMG_${i}.JPG'">
+        <div class="item-overlay"><span>View Full Screen</span></div>
+    `;
 
-            galleryGrid.appendChild(itemDiv);
-        }
+    galleryGrid.appendChild(itemDiv);
+}
 
         // Show next batch of items based on active category
         function showNextBatch() {
