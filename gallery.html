@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baby Ameen | Photo Gallery</title>
-    <!-- Fonts matching the Landing Page -->
+    <title>Baby Amin | Photo Gallery</title>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="gallery.css">
 </head>
 <body>
 
     <div class="page-container">
-        <!-- Header / Navigation -->
+        <!-- Navigation Header -->
         <header class="navbar">
             <div class="logo">
-                <a href="index.html">Baby Ameen</a>
+                <a href="index.html">Baby Amin</a>
             </div>
             <nav>
                 <ul class="nav-links">
@@ -26,111 +29,107 @@
             </nav>
         </header>
 
-        <!-- Gallery Header Title -->
-        <section class="gallery-hero">
-            <span class="subheading">Milestone Memories</span>
-            <h1 class="main-heading">Six Months of Joy</h1>
+        <!-- Gallery Hero / Intro -->
+        <header class="gallery-hero">
+            <span class="subheading">Captured Moments</span>
+            <h1 class="main-heading">Photo Gallery</h1>
             <div class="divider"></div>
-            <p class="tagline">A curated collection of moments celebrating Baby Ameen's special day.</p>
-            
+            <p class="tagline">Exploring milestones, joy, and precious early memories.</p>
+
             <!-- Category Filter Buttons -->
             <div class="filter-bar">
-                <button class="filter-btn active" onclick="filterGallery('curated', this)">Curated Highlights</button>
-                <button class="filter-btn" onclick="filterGallery('portraits', this)">Portraits</button>
-                <button class="filter-btn" onclick="filterGallery('decor', this)">Decor & Details</button>
-                <button class="filter-btn" onclick="filterGallery('celebration', this)">Cake Smash</button>
-                <button class="filter-btn" onclick="filterGallery('all', this)">All Photos</button>
+                <button class="filter-btn active" onclick="filterGallery('all')">All</button>
+                <button class="filter-btn" onclick="filterGallery('curated')">Curated</button>
+                <button class="filter-btn" onclick="filterGallery('portraits')">Portraits</button>
+                <button class="filter-btn" onclick="filterGallery('decor')">Decor</button>
+                <button class="filter-btn" onclick="filterGallery('celebration')">Celebration</button>
             </div>
-        </section>
+        </header>
 
-        <!-- Gallery Masonry Container -->
+        <!-- Gallery Grid Container -->
         <main class="gallery-container">
             <div class="masonry-grid" id="galleryGrid">
-                <!-- Dynamically populated by JavaScript below -->
+                <!-- Dynamically populated by JavaScript -->
             </div>
 
-            <!-- Elegant Load More Button -->
+            <!-- Discover More Moments Button -->
             <div class="load-more-wrapper">
                 <button id="loadMoreBtn" class="btn-load-more" onclick="showNextBatch()">Discover More Moments</button>
             </div>
-
-            <!-- Elegant Load More Button -->
-            <div class="load-more-wrapper">
-                <button id="loadMoreBtn" class="btn-load-more" onclick="showNextBatch()">Discover More Moments</button>
-            </div>
-
-            <!-- Elegant Back to Top Button -->
-            <div class="back-to-top-wrapper" id="backToTopWrapper" style="display: none;">
-                <button class="btn-back-to-top" onclick="scrollToTop()">
-                    <span>Back to Top</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="19" x2="12" y2="5"></line>
-                        <polyline points="5 12 12 5 19 12"></polyline>
-                    </svg>
-                </button>
-            </div>
-            
         </main>
 
-        <!-- Lightbox Modal for Large Image View -->
-        <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <!-- Lightbox Modal -->
+        <div class="lightbox" id="lightbox" onclick="closeLightbox()">
             <span class="close-btn">&times;</span>
             <img class="lightbox-content" id="lightboxImg" alt="Full screen preview">
         </div>
 
         <!-- Footer -->
         <footer class="site-footer">
-            <p class="copyright">&copy; 2026 Baby Ameen’s Journey. All Rights Reserved.</p>
+            <p class="copyright">&copy; 2026 Baby Amin's Journey. All Rights Reserved.</p>
         </footer>
     </div>
 
-    <!-- Script to Generate All Photos with Controlled Pagination -->
+    <!-- JavaScript Logic -->
     <script>
         const startNum = 2516;
         const endNum = 2565;
-        
-        // Define sequence logic for categories
-        const decorPhotos = [2516, 2517, 2518, 2524, 2525, 2526, 2527, 2528, 2538, 2539, 2540, 2541, 2556, 2557, 2558, 2559, 2560, 2561, 2562, 2563];
-        const celebrationPhotos = [2542, 2543, 2544, 2545, 2546, 2547, 2548, 2549, 2550, 2551, 2552, 2553, 2554, 2555];
-        const curatedPhotos = [2519, 2522, 2530, 2535, 2543, 2548, 2558];
+        const itemsPerPage = 9;
+        let currentCategory = 'all';
+
+        // Categorization sequence definitions
+        const curatedPhotos = [2516, 2518, 2520, 2525, 2530, 2535, 2540, 2545, 2550, 2555, 2560, 2565];
+        const decorPhotos = [2521, 2522, 2523, 2524, 2526, 2527];
+        const celebrationPhotos = [2528, 2529, 2531, 2532, 2533, 2534];
 
         const galleryGrid = document.getElementById('galleryGrid');
-        const itemsPerPage = 9;
-        let currentCategory = 'curated';
 
-        // Dynamically build image grid items
-       // Dynamically build image grid items
-for (let i = startNum; i <= endNum; i++) {
-    // Note: Check if your files inside the 'images' folder are .JPG or .jpg
-    // If your files end in uppercase .JPG, change '.jpg' below to '.JPG'
-    const imgName = `IMG_${i}.jpg`; 
-    const imgPath = `images/${imgName}`;
-    
-    // Assign class categories
-    let categories = [];
-    if (curatedPhotos.includes(i)) categories.push('curated');
-    if (decorPhotos.includes(i)) {
-        categories.push('decor');
-    } else if (celebrationPhotos.includes(i)) {
-        categories.push('celebration');
-    } else {
-        categories.push('portraits');
-    }
+        // Dynamically build gallery grid items
+        for (let i = startNum; i <= endNum; i++) {
+            const imgName = `IMG_${i}.jpg`; 
+            const imgPath = `images/${imgName}`;
+            
+            let categories = [];
+            if (curatedPhotos.includes(i)) categories.push('curated');
+            if (decorPhotos.includes(i)) {
+                categories.push('decor');
+            } else if (celebrationPhotos.includes(i)) {
+                categories.push('celebration');
+            } else {
+                categories.push('portraits');
+            }
 
-    const itemDiv = document.createElement('div');
-    itemDiv.className = `gallery-item ${categories.join(' ')}`;
-    itemDiv.style.display = 'none'; // Hidden by default for pagination
-    itemDiv.onclick = () => openLightbox(imgPath);
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `gallery-item ${categories.join(' ')}`;
+            itemDiv.style.display = 'none'; // Hidden initially for pagination
+            itemDiv.onclick = () => openLightbox(imgPath);
 
-    itemDiv.innerHTML = `
-        <img src="${imgPath}" alt="Baby Ameen Photo ${i}" loading="lazy" onerror="this.src='images/IMG_${i}.JPG'">
-        <div class="item-overlay"><span>View Full Screen</span></div>
-    `;
+            itemDiv.innerHTML = `
+                <img src="${imgPath}" alt="Baby Amin Photo ${i}" loading="lazy" onerror="this.src='images/IMG_${i}.JPG'">
+                <div class="item-overlay"><span>View Full Screen</span></div>
+            `;
 
-    galleryGrid.appendChild(itemDiv);
-}
+            galleryGrid.appendChild(itemDiv);
+        }
 
-        // Show next batch of items based on active category
+        // Filter images by category
+        function filterGallery(category) {
+            currentCategory = category;
+
+            // Update active state on filter buttons
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Reset all grid items to hidden
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => item.style.display = 'none');
+
+            // Show first batch for chosen category
+            showNextBatch();
+        }
+
+        // Pagination: Reveal next batch of images
         function showNextBatch() {
             const items = Array.from(document.querySelectorAll('.gallery-item'));
             let revealed = 0;
@@ -144,88 +143,41 @@ for (let i = startNum; i <= endNum; i++) {
                 }
             }
 
-            // Toggle "Discover More" button visibility
+            // Hide or show "Discover More" button depending on remaining items
             const hiddenMatches = items.filter(item => 
                 (currentCategory === 'all' || item.classList.contains(currentCategory)) && item.style.display === 'none'
             );
-            document.getElementById('loadMoreBtn').style.display = hiddenMatches.length > 0 ? 'inline-block' : 'none';
+            
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = hiddenMatches.length > 0 ? 'inline-block' : 'none';
+            }
         }
 
-        // Filter Gallery function
-        function filterGallery(category, buttonEl) {
-            currentCategory = category;
-            const items = document.querySelectorAll('.gallery-item');
-            const buttons = document.querySelectorAll('.filter-btn');
+        // Lightbox Functions
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            
+            lightbox.style.display = 'flex';
+            lightboxImg.src = src;
 
-            buttons.forEach(btn => btn.classList.remove('active'));
-            if (buttonEl) buttonEl.classList.add('active');
-
-            // Hide all and reveal first batch of selected category
-            items.forEach(item => item.style.display = 'none');
-            showNextBatch();
+            // Fallback for uppercase .JPG in lightbox
+            lightboxImg.onerror = function() {
+                if (this.src.endsWith('.jpg')) {
+                    this.src = this.src.replace(/\.jpg$/, '.JPG');
+                } else if (this.src.endsWith('.JPG')) {
+                    this.src = this.src.replace(/\.JPG$/, '.jpg');
+                }
+            };
         }
 
-        // Lightbox functions
-   // Updated Lightbox Functions
-function openLightbox(src) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    
-    lightbox.style.display = 'flex';
-    lightboxImg.src = src;
-
-    // Fallback to uppercase .JPG if lowercase .jpg fails to load in the lightbox
-    lightboxImg.onerror = function() {
-        if (this.src.endsWith('.jpg')) {
-            this.src = this.src.replace(/\.jpg$/, '.JPG');
-        } else if (this.src.endsWith('.JPG')) {
-            this.src = this.src.replace(/\.JPG$/, '.jpg');
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
         }
-    };
-}
 
-function closeLightbox() {
-    document.getElementById('lightbox').style.display = 'none';
-}
-
-        // Initial view setup
+        // Initialize gallery display on page load
         showNextBatch();
-
-
-        // Show next batch of items based on active category
-function showNextBatch() {
-    const items = Array.from(document.querySelectorAll('.gallery-item'));
-    let revealed = 0;
-
-    for (let item of items) {
-        const isMatch = (currentCategory === 'all' || item.classList.contains(currentCategory));
-        if (isMatch && item.style.display === 'none') {
-            item.style.display = 'block';
-            revealed++;
-            if (revealed >= itemsPerPage) break;
-        }
-    }
-
-    // Toggle button visibilities
-    const hiddenMatches = items.filter(item => 
-        (currentCategory === 'all' || item.classList.contains(currentCategory)) && item.style.display === 'none'
-    );
-    
-    document.getElementById('loadMoreBtn').style.display = hiddenMatches.length > 0 ? 'inline-block' : 'none';
-    
-    // Show "Back to Top" if all items in this category are fully revealed
-    document.getElementById('backToTopWrapper').style.display = hiddenMatches.length === 0 ? 'block' : 'none';
-}
-
-// Smooth scroll to top function
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
     </script>
-
-    
 </body>
 </html>
