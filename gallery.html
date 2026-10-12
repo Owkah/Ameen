@@ -53,6 +53,23 @@
             <div class="load-more-wrapper">
                 <button id="loadMoreBtn" class="btn-load-more" onclick="showNextBatch()">Discover More Moments</button>
             </div>
+
+            <!-- Elegant Load More Button -->
+            <div class="load-more-wrapper">
+                <button id="loadMoreBtn" class="btn-load-more" onclick="showNextBatch()">Discover More Moments</button>
+            </div>
+
+            <!-- Elegant Back to Top Button -->
+            <div class="back-to-top-wrapper" id="backToTopWrapper" style="display: none;">
+                <button class="btn-back-to-top" onclick="scrollToTop()">
+                    <span>Back to Top</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
         </main>
 
         <!-- Lightbox Modal for Large Image View -->
@@ -173,6 +190,42 @@ function closeLightbox() {
 
         // Initial view setup
         showNextBatch();
+
+
+        // Show next batch of items based on active category
+function showNextBatch() {
+    const items = Array.from(document.querySelectorAll('.gallery-item'));
+    let revealed = 0;
+
+    for (let item of items) {
+        const isMatch = (currentCategory === 'all' || item.classList.contains(currentCategory));
+        if (isMatch && item.style.display === 'none') {
+            item.style.display = 'block';
+            revealed++;
+            if (revealed >= itemsPerPage) break;
+        }
+    }
+
+    // Toggle button visibilities
+    const hiddenMatches = items.filter(item => 
+        (currentCategory === 'all' || item.classList.contains(currentCategory)) && item.style.display === 'none'
+    );
+    
+    document.getElementById('loadMoreBtn').style.display = hiddenMatches.length > 0 ? 'inline-block' : 'none';
+    
+    // Show "Back to Top" if all items in this category are fully revealed
+    document.getElementById('backToTopWrapper').style.display = hiddenMatches.length === 0 ? 'block' : 'none';
+}
+
+// Smooth scroll to top function
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
     </script>
+
+    
 </body>
 </html>
