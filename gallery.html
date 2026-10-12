@@ -149,14 +149,27 @@ for (let i = startNum; i <= endNum; i++) {
         }
 
         // Lightbox functions
-        function openLightbox(src) {
-            document.getElementById('lightbox').style.display = 'flex';
-            document.getElementById('lightboxImg').src = src;
-        }
+   // Updated Lightbox Functions
+function openLightbox(src) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    
+    lightbox.style.display = 'flex';
+    lightboxImg.src = src;
 
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
+    // Fallback to uppercase .JPG if lowercase .jpg fails to load in the lightbox
+    lightboxImg.onerror = function() {
+        if (this.src.endsWith('.jpg')) {
+            this.src = this.src.replace(/\.jpg$/, '.JPG');
+        } else if (this.src.endsWith('.JPG')) {
+            this.src = this.src.replace(/\.JPG$/, '.jpg');
         }
+    };
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+}
 
         // Initial view setup
         showNextBatch();
